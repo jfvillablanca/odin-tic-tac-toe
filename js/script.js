@@ -46,7 +46,7 @@ const assetFactory = function(name, tag, src) {
     src,
 
   }
-}
+};
 
 (function(){
   // NOTE: Main game loop
