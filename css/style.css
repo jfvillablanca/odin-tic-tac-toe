@@ -34,4 +34,9 @@ body {
   grid-template-columns: repeat(3, 1fr);
 }
 
+.tictacgrid > img {
+  max-height: 100%;
+  max-width: 100%;
 
+  margin: 2rem;
+}
