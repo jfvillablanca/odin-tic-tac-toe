@@ -24,8 +24,16 @@ const Gameboard = (function(doc){
     });
   } 
 
+  const createDOMElement = function (asset) {
+    const newDOMElement = doc.createElement(asset["tag"]);    
+    return {
+      newDOMElement,
+    }
+  }
+
   return {
     addListenerToDivGrid,
+    createDOMElement,
   }
 })(document || documentMock);
 
