@@ -3,6 +3,11 @@
 // - Create factory function for: Player
 // -------------------------------------
 //
+const documentMock = (() => ({
+  querySelector: (_selector) => ({
+    textContent: null,
+  }),
+}))();
 
 const Gameboard = (function(doc){
   'use strict';
@@ -22,7 +27,7 @@ const Gameboard = (function(doc){
   return {
     addListenerToDivGrid,
   }
-})(document);
+})(document || documentMock);
 
 (function(){
   // NOTE: Main game loop
