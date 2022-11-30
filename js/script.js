@@ -12,6 +12,13 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
+  const _createDOMElement = function (asset) {
+    const newDOMElement = doc.createElement(asset["tag"]);
+    return {
+      newDOMElement,
+    };
+  };
+
   const _listenerCallback = function (e) {
     e.target.classList.toggle("green");
   };
@@ -24,16 +31,8 @@ const Gameboard = (function (doc) {
     });
   };
 
-  const createDOMElement = function (asset) {
-    const newDOMElement = doc.createElement(asset["tag"]);
-    return {
-      newDOMElement,
-    };
-  };
-
   return {
     addListenerToDivGrid,
-    createDOMElement,
   };
 })(document || documentMock);
 
