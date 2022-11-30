@@ -12,11 +12,13 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
-  const _createDOMElement = function (asset) {
-    const newDOMElement = doc.createElement(asset["tag"]);
-    return {
-      newDOMElement,
-    };
+  let _gamePieceX = null;
+  let _gamePieceO = null;
+  const init = function(srcX, srcO){
+    _gamePieceX = doc.createElement("img"); 
+    _gamePieceX.setAttribute("src", srcX);
+    _gamePieceO = doc.createElement("img"); 
+    _gamePieceO.setAttribute("src", srcO);
   };
 
   const _listenerCallback = function (e) {
@@ -60,6 +62,7 @@ const Player = function(playerName, gamePiece) {
 
   const player1 = Player("Alice", "X");
   const player2 = Player("Bob", "O");
-
+  
+  Gameboard.init(srcCross, srcCircle);
   Gameboard.addListenerToDivGrid(".tictacgrid");
 })();
