@@ -12,15 +12,15 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
+  const _listenerCallback = function (e) {
+    e.target.classList.toggle("green");
+  };
+
   const addListenerToDivGrid = function (gridCellSelector) {
     const gridCells = doc.querySelectorAll(gridCellSelector);
 
-    const listenerCallback = function (e) {
-      e.target.classList.toggle("green");
-    };
-
     gridCells.forEach((gridCell) => {
-      gridCell.addEventListener("click", listenerCallback);
+      gridCell.addEventListener("click", _listenerCallback);
     });
   };
 
