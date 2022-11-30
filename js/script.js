@@ -29,6 +29,17 @@ const Gameboard = (function(doc){
   }
 })(document || documentMock);
 
+const assetFactory = function(name, tag, src) {
+  'use strict';
+
+  return {
+    name,
+    tag,
+    src,
+
+  }
+}
+
 (function(){
   // NOTE: Main game loop
   Gameboard.addListenerToDivGrid(".tictacgrid");
