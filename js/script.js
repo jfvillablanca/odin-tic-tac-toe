@@ -46,11 +46,20 @@ const assetFactory = function (name, tag, src) {
   };
 };
 
+const Player = function(playerName, gamePiece) {
+  return {
+    playerName,
+    gamePiece,
+  };
+};
+
 (function () {
   // NOTE: Main game loop
-  const cross = assetFactory("cross", "img", "./../images/assets/sword.svg");
-  const circle = assetFactory("cross", "img", "./../images/assets/shield.svg");
-  console.log(Gameboard.createDOMElement(cross));
-  console.log(Gameboard.createDOMElement(circle));
+  const srcCross = "./../images/assets/sword.svg";
+  const srcCircle = "./../images/assets/shield.svg";
+
+  const player1 = Player("Alice", "X");
+  const player2 = Player("Bob", "O");
+
   Gameboard.addListenerToDivGrid(".tictacgrid");
 })();
