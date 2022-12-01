@@ -2,7 +2,13 @@
 // - Create module for: gameBoard
 // - Create factory function for: Player
 // -------------------------------------
-//
+// - Game loop:
+// 1. Assign X or O to both players. player1 = Player("Alice","X"), player2 = Player("Bob","O");
+// 2. Determine whose turn it is and toggle after each move of the player
+// 3. Gameboard.placePiece(playerNum) 
+// -------------------------------------
+// - Low prio: Initialize tictacgrid in Gameboard.init() instead of using HTML.
+
 const documentMock = (() => ({
   querySelector: (_selector) => ({
     textContent: null,
@@ -11,6 +17,7 @@ const documentMock = (() => ({
 
 const Gameboard = (function (doc) {
   "use strict";
+  const curGamePiece = "X";
 
   let _gamePieceX = null;
   let _gamePieceO = null;
@@ -34,6 +41,9 @@ const Gameboard = (function (doc) {
   };
 
   return {
+    curGamePiece,
+
+    init,
     addListenerToDivGrid,
   };
 })(document || documentMock);
@@ -55,7 +65,7 @@ const Player = function(playerName, gamePiece) {
   };
 };
 
-(function () {
+const gameLoop = function () {
   // NOTE: Main game loop
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
@@ -65,4 +75,27 @@ const Player = function(playerName, gamePiece) {
   
   Gameboard.init(srcCross, srcCircle);
   Gameboard.addListenerToDivGrid(".tictacgrid");
-})();
+
+  // HACK: Testing gamePiece render toggle
+  let playerToggle = false;
+  // for(let i=0; i<9; i++) {
+  //   if (!playerToggle) {
+  //     console.log(`${player1.playerName}'s turn`)
+  //   } else {
+  //     console.log(`${player2.playerName}'s turn`)
+  //   }
+  //
+  //
+  //
+  //   if (i%2 === 0){
+  //     Gameboard.curGamePiece = "X";
+  //     console.log(Gameboard.curGamePiece);
+  //   }
+  //   else {
+  //     Gameboard.curGamePiece = "O";
+  //     console.log(Gameboard.curGamePiece);
+  //   }
+  // }
+};
+
+gameLoop();
