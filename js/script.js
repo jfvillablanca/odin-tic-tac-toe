@@ -21,6 +21,11 @@ const Gameboard = (function (doc) {
 
   let _gamePieceX = null;
   let _gamePieceO = null;
+  const _gameBoardArray = [
+    [0,0,0],
+    [0,0,0],
+    [0,0,0],
+  ];
   const init = function(srcX, srcO){
     _gamePieceX = doc.createElement("img"); 
     _gamePieceX.setAttribute("src", srcX);
@@ -29,7 +34,7 @@ const Gameboard = (function (doc) {
   };
   
   const _checkGameBoardState = function (cellRow, cellColumn) {
-    console.log([cellRow, cellColumn]); 
+    _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
   }
 
   const _listenerCallback = function (gridCell) {
