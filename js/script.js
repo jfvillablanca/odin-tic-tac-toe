@@ -27,9 +27,22 @@ const Gameboard = (function (doc) {
     _gamePieceO = doc.createElement("img"); 
     _gamePieceO.setAttribute("src", srcO);
   };
+  
+  const _checkGameBoardState = function (cellRow, cellColumn) {
+    console.log([cellRow, cellColumn]); 
+  }
 
-  const _listenerCallback = function (e) {
-    e.target.classList.toggle("green");
+  const _listenerCallback = function (gridCell) {
+    gridCell.target.appendChild(_gamePieceX);
+    console.log();
+    _checkGameBoardState(
+      gridCell.target.getAttribute("data-row"), 
+      gridCell.target.getAttribute("data-column"));
+    // if(curGamePiece === "X"){
+    //   gridCell.target.appendChild(_gamePieceX);
+    // } else {
+    //   gridCell.target.appendChild(_gamePieceO);
+    // }
   };
 
   const addListenerToDivGrid = function (gridCellSelector) {
