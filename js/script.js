@@ -34,15 +34,22 @@ const Gameboard = (function (doc) {
   };
   
   const _checkGameBoardState = function (cellRow, cellColumn) {
-    _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
-  }
+    if (_gameBoardArray[cellRow][cellColumn] === 0) {
+      _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
+      return true;
+    }
+  };
 
   const _listenerCallback = function (gridCell) {
-    gridCell.target.appendChild(_gamePieceX);
-    console.log();
-    _checkGameBoardState(
-      gridCell.target.getAttribute("data-row"), 
-      gridCell.target.getAttribute("data-column"));
+    if (
+      _checkGameBoardState(
+        +gridCell.target.getAttribute("data-row"),
+        +gridCell.target.getAttribute("data-column")
+      )
+    ) {
+      gridCell.target.appendChild(_gamePieceX);
+    }
+
     // if(curGamePiece === "X"){
     //   gridCell.target.appendChild(_gamePieceX);
     // } else {
