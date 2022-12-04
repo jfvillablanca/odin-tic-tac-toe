@@ -17,60 +17,64 @@ const documentMock = (() => ({
 
 const Gameboard = (function (doc) {
   "use strict";
-  const curGamePiece = "X";
-
+  let currentGamePiece = "X";
+  let _gridCells = null;
   let _gamePieceX = null;
   let _gamePieceO = null;
   const _gameBoardArray = [
-    [0,0,0],
-    [0,0,0],
-    [0,0,0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
   ];
-  const init = function(srcX, srcO){
-    _gamePieceX = doc.createElement("img"); 
+
+  const init = function(srcX, srcO) {
+    _cacheDOM(srcX, srcO);
+  }
+
+  const _cacheDOM = function(srcX, srcO) {
+    _gamePieceX = doc.createElement("img");
     _gamePieceX.setAttribute("src", srcX);
-    _gamePieceO = doc.createElement("img"); 
+    _gamePieceO = doc.createElement("img");
     _gamePieceO.setAttribute("src", srcO);
-  };
-  
-  const _checkGameBoardState = function (cellRow, cellColumn) {
-    if (_gameBoardArray[cellRow][cellColumn] === 0) {
-      _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
-      return true;
-    }
-  };
+    _gridCells = doc.querySelectorAll(".tictacgrid");
 
-  const _listenerCallback = function (gridCell) {
-    if (
-      _checkGameBoardState(
-        +gridCell.target.getAttribute("data-row"),
-        +gridCell.target.getAttribute("data-column")
-      )
-    ) {
-      gridCell.target.appendChild(_gamePieceX);
-    }
-
-    // if(curGamePiece === "X"){
-    //   gridCell.target.appendChild(_gamePieceX);
-    // } else {
-    //   gridCell.target.appendChild(_gamePieceO);
-    // }
-  };
-
-  const addListenerToDivGrid = function (gridCellSelector) {
-    const gridCells = doc.querySelectorAll(gridCellSelector);
-
-    gridCells.forEach((gridCell) => {
-      gridCell.addEventListener("click", _listenerCallback);
+    _gridCells.forEach((_gridCell) => {
+      _gridCell.addEventListener("click", _render);
     });
-  };
+  }
+
+  const _render = function(event) {
+    event.target.classList.add("green");
+  }
 
   return {
-    curGamePiece,
-
+    currentGamePiece,
     init,
-    addListenerToDivGrid,
-  };
+  }
+
+  // const _checkGameBoardState = function (cellRow, cellColumn) {
+  //   if (_gameBoardArray[cellRow][cellColumn] === 0) {
+  //     _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
+  //     return true;
+  //   } 
+  // };
+  //
+  // const _listenerCallback = function (gridCell) {
+  //   if (
+  //     _checkGameBoardState(
+  //       +gridCell.target.getAttribute("data-row"),
+  //       +gridCell.target.getAttribute("data-column")
+  //     )
+  //   ) {
+  //     gridCell.target.appendChild(_gamePieceX);
+  //   }
+  //
+  //   // if(curGamePiece === "X"){
+  //   //   gridCell.target.appendChild(_gamePieceX);
+  //   // } else {
+  //   //   gridCell.target.appendChild(_gamePieceO);
+  //   // }
+  // };
 })(document || documentMock);
 
 const Player = function (playerName, gamePiece) {
