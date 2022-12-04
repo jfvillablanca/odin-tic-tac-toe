@@ -73,17 +73,8 @@ const Gameboard = (function (doc) {
   };
 })(document || documentMock);
 
-const assetFactory = function (name, tag, src) {
+const Player = function (playerName, gamePiece) {
   "use strict";
-
-  return {
-    name,
-    tag,
-    src,
-  };
-};
-
-const Player = function(playerName, gamePiece) {
   return {
     playerName,
     gamePiece,
