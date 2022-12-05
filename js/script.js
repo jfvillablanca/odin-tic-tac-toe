@@ -63,22 +63,17 @@ const Gameboard = (function (doc) {
   }
 
   const _addToGameBoard = function(_gridCellEvent) {
-    if (
-      _checkGameBoardState(
-        +_gridCellEvent.target.getAttribute("data-row"),
-        +_gridCellEvent.target.getAttribute("data-column")
-      )
-    ) {
+    const cellRow = +_gridCellEvent.target.getAttribute("data-row");
+    const cellColumn = +_gridCellEvent.target.getAttribute("data-column");
+    if (_gameBoardArray[cellRow][cellColumn] === 0) {
+      _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
+      _render();
+      _toggleCurrentGamePiece();
+    } 
+  }
 
-    // HACK: For debugging ---------------------
-      _gridCellEvent.target.classList.add("green");
-      
-    // -----------------------------------------
-    } else {
-    // HACK: For debugging ---------------------
-      _gridCellEvent.target.classList.add("blue");
-    // -----------------------------------------
-    }
+  const _toggleCurrentGamePiece = function() {
+    _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
   }
 
   return {
