@@ -74,28 +74,132 @@ const Gameboard = (function (doc) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
       _render();
       if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN) {
-        _checkWinCondition(cellRow, cellColumn);
+        if (_checkWinCondition(cellRow, cellColumn)) {
+          console.log(`${_currentGamePiece} wins: row: ${cellRow}, col: ${cellColumn}`);
+          console.log(`movecount: ${_moveCount}`);
+          console.table(_gameBoardArray);
+        }
       }
       _toggleCurrentGamePiece();
     } 
   }
 
-  const _checkWinCondition = function (cellRow, cellColumn) {
-    if (cellRow === 1 && cellColumn === 1) {
-      console.log("middle")
-      _checkMiddleWin();
+  const _checkWinCondition = function (i, j) {
+    if (i === 1 && j === 1) {
+      return _checkIfMiddleIsWinningMove();
+    } else if ((i === 0 && j === 0) ||
+               (i === 0 && j === 2) ||
+               (i === 2 && j === 0) || 
+               (i === 2 && j === 2)) {
+      return _checkIfCornerIsWinningMove(i, j);
+    } else {
+      return _checkIfEdgeIsWinningMove(i, j);
+    } 
+  }
+
+  const _checkIfMiddleIsWinningMove = function() {
+    const i = 1;
+    const j = 1;
+    // to shorten the `if` condition block
+    const gBA = _gameBoardArray;
+    
+    // |   |   |   |
+    // |   | * |   |
+    // |   |   |   |
+    if ((gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i+1][j+1])   ||     // \
+        (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])     ||     // |
+        (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i-1][j+1])   ||     // /
+        (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))     {     // --
+      return true;
+    } else return false;
+  }
+
+  const _checkIfCornerIsWinningMove = function(i, j) {
+    // to shorten the `if` condition block
+    const gBA = _gameBoardArray;
+    
+    // | * |   |   |
+    // |   |   |   |
+    // |   |   |   |
+    if (i === 0 && j === 0) {
+      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
+          (gBA[i][j] === gBA[i+1][j+1] && gBA[i][j] === gBA[i+2][j+2]) ||     // \
+          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   |   | * |
+    // |   |   |   |
+    // |   |   |   |
+    else if (i === 0 && j === 2) {
+      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])   ||     // --
+          (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i+2][j-2]) ||     // / 
+          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   |   |   |
+    // |   |   |   |
+    // | * |   |   |
+    else if (i === 2 && j === 0) {
+      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
+          (gBA[i][j] === gBA[i-1][j+1] && gBA[i][j] === gBA[i-2][j+2]) ||     // / 
+          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   |   |   |
+    // |   |   |   |
+    // |   |   | * |
+    else {
+      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])   ||     // --
+          (gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i-2][j-2]) ||     // \
+          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+        return true;
+      } else return false;  
     }
   }
 
-  const _checkMiddleWin = function() {
-    const i = 1;
-    const j = 1;
-    if ((_gameBoardArray[i][j] === _gameBoardArray[i-1][j-1] && _gameBoardArray[i][j] === _gameBoardArray[i+1][j+1]) ||
-        (_gameBoardArray[i][j] === _gameBoardArray[i][j-1]   && _gameBoardArray[i][j] === _gameBoardArray[i][j+1]) || 
-        (_gameBoardArray[i][j] === _gameBoardArray[i+1][j-1] && _gameBoardArray[i][j] === _gameBoardArray[i-1][j+1]) || 
-        (_gameBoardArray[i][j] === _gameBoardArray[i-1][j]   && _gameBoardArray[i][j] === _gameBoardArray[i+1][j])) {
-      console.log(`${_currentGamePiece} wins`);
-    }
+  const _checkIfEdgeIsWinningMove = function(i, j) {
+    // to shorten the `if` condition block
+    const gBA = _gameBoardArray;
+    
+    // |   |   |   |
+    // | * |   |   |
+    // |   |   |   |
+    if (i === 1 && j === 0) {
+      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
+          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   | * |   |
+    // |   |   |   |
+    // |   |   |   |
+    else if (i === 0 && j === 1) {
+      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
+          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   |   |   |
+    // |   |   | * |
+    // |   |   |   |
+    else if (i === 1 && j === 2) {
+      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
+          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))   {     // |
+        return true;
+      }  
+    } 
+    // |   |   |   |
+    // |   |   |   |
+    // |   | * |   |
+    else {
+      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
+          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+        return true;
+      } else return false;  
+    } 
   }
 
   const _toggleCurrentGamePiece = function() {
