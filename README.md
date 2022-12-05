@@ -22,6 +22,11 @@ This project uses [Skeleton](https://github.com/dhg/Skeleton) for boilerplate
 7. The callback does these things:
     1. Get the `data-row` and `data-column` of the triggered cell.
     2. Splice the _currentGamePiece to the respective _gameBoardArray index.
-    3. Invoke _render() to paint the DOM
-    4. check for win or draw condition _(WORK IN PROGRESS)_
+    3. Invoke _render() to paint the DOM.
+    4. check for win or draw condition.
     5. Switch the current game piece.
+8. _checkWinCondition() does these things:
+    1. If the currently added piece is in row: 1, col: 1 (middle of the board), check if win,
+    2. else if, the currently added piece is in row: 0, col: 0 OR ... (corners of the board), check if win,
+    3. else, the currently added piece is in row: 1, col: 0 OR ... (edges of the board), check if win.
+    4. If no win condition AND _moveCount === 9 (max no. of moves), then game is draw.

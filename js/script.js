@@ -1,15 +1,9 @@
 // TODO:
-// - Create module for: gameBoard
-// - Create factory function for: Player
-// -------------------------------------
-// - Game loop:
-// 1. Assign X or O to both players. player1 = Player("Alice","X"), player2 = Player("Bob","O");
-// 2. Determine whose turn it is and toggle after each move of the player
-// 3. Gameboard.placePiece(playerNum)
-// -------------------------------------
-// - Gameboard.
-// - asdj
-// -------------------------------------
+// - Game reset
+// - Player choose their game piece
+// - Display whose turn it is
+// - Highlight winning cells
+// - Prettify the game board in css
 
 const documentMock = (() => ({
   querySelector: (_selector) => ({
