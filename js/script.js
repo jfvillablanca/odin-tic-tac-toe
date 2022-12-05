@@ -5,9 +5,11 @@
 // - Game loop:
 // 1. Assign X or O to both players. player1 = Player("Alice","X"), player2 = Player("Bob","O");
 // 2. Determine whose turn it is and toggle after each move of the player
-// 3. Gameboard.placePiece(playerNum) 
+// 3. Gameboard.placePiece(playerNum)
 // -------------------------------------
-// - Low prio: Initialize tictacgrid in Gameboard.init() instead of using HTML.
+// - Gameboard.
+// - asdj
+// -------------------------------------
 
 const documentMock = (() => ({
   querySelector: (_selector) => ({
@@ -17,7 +19,9 @@ const documentMock = (() => ({
 
 const Gameboard = (function (doc) {
   "use strict";
-
+  // NOTE: It takes 5 moves to win the game. 
+  // Example: If player 1 tries to win ASAP and player 2 plays ignorantly.
+  const MINIMUM_MOVE_COUNT_TO_WIN = 5;
   let _currentGamePiece = "X";
   let _gridCells = null;
   let _gamePieceX = null;
@@ -30,7 +34,6 @@ const Gameboard = (function (doc) {
 
   const init = function(srcX, srcO) {
     _cacheDOM(srcX, srcO);
-    _render();
   }
 
   const _cacheDOM = function(srcX, srcO) {
@@ -46,14 +49,13 @@ const Gameboard = (function (doc) {
   }
 
   const _render = function() {
-    [..._gridCells].map((_gridCell) => {
+    [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
       const column = +_gridCell.getAttribute("data-column");
       const _gamePieceRender = doc.createElement("img");
       
       if (_gameBoardArray[row][column] === "X" && _gridCell.firstChild === null) {
         _gamePieceRender.setAttribute("src", _gamePieceX.getAttribute("src"));
-        console.log(_gridCell);
         _gridCell.appendChild(_gamePieceRender);
       } else if (_gameBoardArray[row][column] === "O" && _gridCell.firstChild === null) {
         _gamePieceRender.setAttribute("src", _gamePieceO.getAttribute("src"));
@@ -77,7 +79,6 @@ const Gameboard = (function (doc) {
   }
 
   return {
-    _currentGamePiece,
     init,
   }
 })(document || documentMock);
@@ -95,31 +96,10 @@ const gameLoop = function () {
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
-  const player1 = Player("Alice", "X");
-  const player2 = Player("Bob", "O");
-  
   Gameboard.init(srcCross, srcCircle);
 
-  // HACK: Testing gamePiece render toggle
-  let playerToggle = false;
-  // for(let i=0; i<9; i++) {
-  //   if (!playerToggle) {
-  //     console.log(`${player1.playerName}'s turn`)
-  //   } else {
-  //     console.log(`${player2.playerName}'s turn`)
-  //   }
-  //
-  //
-  //
-  //   if (i%2 === 0){
-  //     Gameboard.curGamePiece = "X";
-  //     console.log(Gameboard.curGamePiece);
-  //   }
-  //   else {
-  //     Gameboard.curGamePiece = "O";
-  //     console.log(Gameboard.curGamePiece);
-  //   }
-  // }
-};
+  const player1 = Player("Alice", "X");
+  const player2 = Player("Bob", "O");
 
+}
 gameLoop();
