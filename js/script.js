@@ -51,9 +51,11 @@ const Gameboard = (function (doc) {
       const column = +_gridCell.getAttribute("data-column");
       const _gamePieceRender = doc.createElement("img");
       
-      if (_gameBoardArray[row][column] === "X") {
+      if (_gameBoardArray[row][column] === "X" && _gridCell.firstChild === null) {
         _gamePieceRender.setAttribute("src", _gamePieceX.getAttribute("src"));
-      } else if (_gameBoardArray[row][column] === "O") {
+        console.log(_gridCell);
+        _gridCell.appendChild(_gamePieceRender);
+      } else if (_gameBoardArray[row][column] === "O" && _gridCell.firstChild === null) {
         _gamePieceRender.setAttribute("src", _gamePieceO.getAttribute("src"));
         _gridCell.appendChild(_gamePieceRender);
       } 
