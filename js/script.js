@@ -29,6 +29,7 @@ const Gameboard = (function (doc) {
 
   const init = function(srcX, srcO) {
     _cacheDOM(srcX, srcO);
+    _render();
   }
 
   const _cacheDOM = function(srcX, srcO) {
@@ -43,8 +44,39 @@ const Gameboard = (function (doc) {
     });
   }
 
-  const _render = function(event) {
-    event.target.classList.add("green");
+  const _render = function() {
+    [..._gridCells].map((_gridCell) => {
+      const row = +_gridCell.getAttribute("data-row");
+      const column = +_gridCell.getAttribute("data-column");
+      const _gamePieceRender = doc.createElement("img");
+      // _gamePieceRender = _gamePieceX;
+      
+      if (_gameBoardArray[row][column] === "X") {
+        _gamePieceRender.setAttribute("src", _gamePieceX.getAttribute("src"));
+      } else if (_gameBoardArray[row][column] === "O") {
+        _gamePieceRender.setAttribute("src", _gamePieceO.getAttribute("src"));
+      }
+      _gridCell.appendChild(_gamePieceRender);
+    });
+  }
+
+  const _addToGameBoard = function(_gridCellEvent) {
+    if (
+      _checkGameBoardState(
+        +_gridCellEvent.target.getAttribute("data-row"),
+        +_gridCellEvent.target.getAttribute("data-column")
+      )
+    ) {
+
+    // HACK: For debugging ---------------------
+      _gridCellEvent.target.classList.add("green");
+      
+    // -----------------------------------------
+    } else {
+    // HACK: For debugging ---------------------
+      _gridCellEvent.target.classList.add("blue");
+    // -----------------------------------------
+    }
   }
 
   return {
