@@ -23,6 +23,7 @@ const Gameboard = (function (doc) {
   // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
   // player 1 wins after placing their piece 3 times.
   const MINIMUM_MOVE_COUNT_TO_WIN = 5;
+  const MAXIMUM_MOVE_COUNT = 9;
   // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
   let _moveCount = 1;
   let _currentGamePiece = "X";
@@ -79,6 +80,9 @@ const Gameboard = (function (doc) {
           console.log(`movecount: ${_moveCount}`);
           console.table(_gameBoardArray);
         }
+      }
+      if (_moveCount === MAXIMUM_MOVE_COUNT) {
+        console.log("Game draw");
       }
       _toggleCurrentGamePiece();
     } 
