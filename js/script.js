@@ -17,7 +17,8 @@ const documentMock = (() => ({
 
 const Gameboard = (function (doc) {
   "use strict";
-  let currentGamePiece = "X";
+
+  let _currentGamePiece = "X";
   let _gridCells = null;
   let _gamePieceX = null;
   let _gamePieceO = null;
@@ -40,7 +41,7 @@ const Gameboard = (function (doc) {
     _gridCells = doc.querySelectorAll(".tictacgrid");
 
     _gridCells.forEach((_gridCell) => {
-      _gridCell.addEventListener("click", _render);
+      _gridCell.addEventListener("click", _addToGameBoard);
     });
   }
 
@@ -49,14 +50,13 @@ const Gameboard = (function (doc) {
       const row = +_gridCell.getAttribute("data-row");
       const column = +_gridCell.getAttribute("data-column");
       const _gamePieceRender = doc.createElement("img");
-      // _gamePieceRender = _gamePieceX;
       
       if (_gameBoardArray[row][column] === "X") {
         _gamePieceRender.setAttribute("src", _gamePieceX.getAttribute("src"));
       } else if (_gameBoardArray[row][column] === "O") {
         _gamePieceRender.setAttribute("src", _gamePieceO.getAttribute("src"));
-      }
-      _gridCell.appendChild(_gamePieceRender);
+        _gridCell.appendChild(_gamePieceRender);
+      } 
     });
   }
 
@@ -80,33 +80,9 @@ const Gameboard = (function (doc) {
   }
 
   return {
-    currentGamePiece,
+    _currentGamePiece,
     init,
   }
-
-  // const _checkGameBoardState = function (cellRow, cellColumn) {
-  //   if (_gameBoardArray[cellRow][cellColumn] === 0) {
-  //     _gameBoardArray[cellRow].splice(cellColumn, 1, "X");
-  //     return true;
-  //   } 
-  // };
-  //
-  // const _listenerCallback = function (gridCell) {
-  //   if (
-  //     _checkGameBoardState(
-  //       +gridCell.target.getAttribute("data-row"),
-  //       +gridCell.target.getAttribute("data-column")
-  //     )
-  //   ) {
-  //     gridCell.target.appendChild(_gamePieceX);
-  //   }
-  //
-  //   // if(curGamePiece === "X"){
-  //   //   gridCell.target.appendChild(_gamePieceX);
-  //   // } else {
-  //   //   gridCell.target.appendChild(_gamePieceO);
-  //   // }
-  // };
 })(document || documentMock);
 
 const Player = function (playerName, gamePiece) {
@@ -126,7 +102,6 @@ const gameLoop = function () {
   const player2 = Player("Bob", "O");
   
   Gameboard.init(srcCross, srcCircle);
-  Gameboard.addListenerToDivGrid(".tictacgrid");
 
   // HACK: Testing gamePiece render toggle
   let playerToggle = false;
