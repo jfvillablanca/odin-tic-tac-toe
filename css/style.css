@@ -24,14 +24,15 @@ body {
 }
 
 .gameboard {
-  height: 50rem;
-  width: 50rem;
+  --grid-size: 50rem;
+  height: var(--grid-size);
+  width: var(--grid-size);
 
   place-self: center;
 
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, calc(var(--grid-size) / 3));
+  grid-template-columns: repeat(3, calc(var(--grid-size) / 3));
 }
 
 .tictacgrid > img {
