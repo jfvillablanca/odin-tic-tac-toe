@@ -20,8 +20,11 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
   // NOTE: It takes 5 moves to win the game. 
-  // Example: If player 1 tries to win ASAP and player 2 plays ignorantly.
+  // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
+  // player 1 wins after placing their piece 3 times.
   const MINIMUM_MOVE_COUNT_TO_WIN = 5;
+  // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
+  let _moveCount = 1;
   let _currentGamePiece = "X";
   let _gridCells = null;
   let _gamePieceX = null;
@@ -70,12 +73,34 @@ const Gameboard = (function (doc) {
     if (_gameBoardArray[cellRow][cellColumn] === 0) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
       _render();
+      if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN) {
+        _checkWinCondition(cellRow, cellColumn);
+      }
       _toggleCurrentGamePiece();
     } 
   }
 
+  const _checkWinCondition = function (cellRow, cellColumn) {
+    if (cellRow === 1 && cellColumn === 1) {
+      console.log("middle")
+      _checkMiddleWin();
+    }
+  }
+
+  const _checkMiddleWin = function() {
+    const i = 1;
+    const j = 1;
+    if ((_gameBoardArray[i][j] === _gameBoardArray[i-1][j-1] && _gameBoardArray[i][j] === _gameBoardArray[i+1][j+1]) ||
+        (_gameBoardArray[i][j] === _gameBoardArray[i][j-1]   && _gameBoardArray[i][j] === _gameBoardArray[i][j+1]) || 
+        (_gameBoardArray[i][j] === _gameBoardArray[i+1][j-1] && _gameBoardArray[i][j] === _gameBoardArray[i-1][j+1]) || 
+        (_gameBoardArray[i][j] === _gameBoardArray[i-1][j]   && _gameBoardArray[i][j] === _gameBoardArray[i+1][j])) {
+      console.log(`${_currentGamePiece} wins`);
+    }
+  }
+
   const _toggleCurrentGamePiece = function() {
     _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
+    _moveCount++;
   }
 
   return {
