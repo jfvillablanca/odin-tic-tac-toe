@@ -1,8 +1,8 @@
 // TODO:
-// - Game reset
+// / Game reset
 // - Player choose their game piece
 // - Display whose turn it is
-// - Highlight winning cells
+// / Highlight winning cells
 // / Prettify the game board in css
 
 const documentMock = (() => ({
@@ -115,10 +115,20 @@ const Gameboard = (function (doc) {
     // |   |   |   |
     // |   | * |   |
     // |   |   |   |
-    if ((gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i+1][j+1])   ||     // \
-        (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])     ||     // |
-        (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i-1][j+1])   ||     // /
-        (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))     {     // --
+    if (gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i+1][j+1])          {       // \
+      _highlightWinningCells([i,j], [i-1,j-1], [i+1,j+1])
+      return true;
+    }
+    else if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])       {       // |
+      _highlightWinningCells([i,j], [i,j-1], [i,j+1])
+      return true;
+    }
+    else if (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i-1][j+1])     {       // /
+      _highlightWinningCells([i,j], [i+1,j-1], [i-1,j+1])
+      return true;
+    }
+    else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j])       {       // --     
+      _highlightWinningCells([i,j], [i-1,j], [i+1,j])
       return true;
     } else return false;
   }
@@ -131,39 +141,67 @@ const Gameboard = (function (doc) {
     // |   |   |   |
     // |   |   |   |
     if (i === 0 && j === 0) {
-      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
-          (gBA[i][j] === gBA[i+1][j+1] && gBA[i][j] === gBA[i+2][j+2]) ||     // \
-          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])          {       // --
+        _highlightWinningCells([i,j], [i,j+1], [i,j+2])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i+1][j+1] && gBA[i][j] === gBA[i+2][j+2])   {       // \
+        _highlightWinningCells([i,j], [i+1,j+1], [i+2,j+2])
+        return true;
+      }
+      else if (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j])     {       // |
+        _highlightWinningCells([i,j], [i+1,j], [i+2,j])
+        return true;
+      }
     } 
     // |   |   | * |
     // |   |   |   |
     // |   |   |   |
     else if (i === 0 && j === 2) {
-      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])   ||     // --
-          (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i+2][j-2]) ||     // / 
-          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])          {       // --
+        _highlightWinningCells([i,j], [i,j-1], [i,j-2])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i+1][j-1] && gBA[i][j] === gBA[i+2][j-2])   {       // /
+        _highlightWinningCells([i,j], [i+1,j-1], [i+2,j-2])
+        return true;
+      }
+      else if (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j])     {       // |
+        _highlightWinningCells([i,j], [i+1,j], [i+2,j])
+        return true;
+      }
     } 
     // |   |   |   |
     // |   |   |   |
     // | * |   |   |
     else if (i === 2 && j === 0) {
-      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
-          (gBA[i][j] === gBA[i-1][j+1] && gBA[i][j] === gBA[i-2][j+2]) ||     // / 
-          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])          {       // --
+        _highlightWinningCells([i,j], [i,j+1], [i,j+2])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i-1][j+1] && gBA[i][j] === gBA[i-2][j+2])   {       // /
+        _highlightWinningCells([i,j], [i-1,j+1], [i-2,j+2])
+        return true;
+      }
+      else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j])     {       // |
+        _highlightWinningCells([i,j], [i-1,j], [i-2,j])
+        return true;
+      }
     } 
     // |   |   |   |
     // |   |   |   |
     // |   |   | * |
     else {
-      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])   ||     // --
-          (gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i-2][j-2]) ||     // \
-          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])          {       // --
+        _highlightWinningCells([i,j], [i,j-1], [i,j-2])
+        return true;
+      }  
+      else if (gBA[i][j] === gBA[i-1][j-1] && gBA[i][j] === gBA[i-2][j-2])   {       // \
+        _highlightWinningCells([i,j], [i-1,j-1], [i-2,j-2])
+        return true;
+      }
+      else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j])     {       // |
+        _highlightWinningCells([i,j], [i-1,j], [i-2,j])
         return true;
       } else return false;  
     }
@@ -177,35 +215,51 @@ const Gameboard = (function (doc) {
     // | * |   |   |
     // |   |   |   |
     if (i === 1 && j === 0) {
-      if ((gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])   ||     // --
-          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j+1]   && gBA[i][j] === gBA[i][j+2])         {        // --
+        _highlightWinningCells([i,j], [i,j+1], [i,j+2])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j])    {        // |
+        _highlightWinningCells([i,j], [i-1,j], [i+1,j])
+        return true;
+      }
     } 
     // |   | * |   |
     // |   |   |   |
     // |   |   |   |
     else if (i === 0 && j === 1) {
-      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
-          (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])         {        // --
+        _highlightWinningCells([i,j], [i,j-1], [i,j+1])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i+1][j]   && gBA[i][j] === gBA[i+2][j])    {        // |
+        _highlightWinningCells([i,j], [i+1,j], [i+2,j])
+        return true;
+      }
     } 
     // |   |   |   |
     // |   |   | * |
     // |   |   |   |
     else if (i === 1 && j === 2) {
-      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
-          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j-2])         {        // --
+        _highlightWinningCells([i,j], [i,j-1], [i,j-2])
         return true;
       }  
+      else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i+1][j])    {        // |
+        _highlightWinningCells([i,j], [i-1,j], [i+1,j])
+        return true;
+      }
     } 
     // |   |   |   |
     // |   |   |   |
     // |   | * |   |
     else {
-      if ((gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])   ||     // --
-          (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j]))   {     // |
+      if (gBA[i][j] === gBA[i][j-1]   && gBA[i][j] === gBA[i][j+1])         {        // --
+        _highlightWinningCells([i,j], [i,j-1], [i,j+1])
+        return true;
+      }  
+      else if (gBA[i][j] === gBA[i-1][j]   && gBA[i][j] === gBA[i-2][j])    {        // |
+        _highlightWinningCells([i,j], [i-1,j], [i-2,j])
         return true;
       } else return false;  
     } 
@@ -283,6 +337,9 @@ const gameStart = (function(doc) {
       gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
         gridCell.removeChild(gridCell.firstChild);
+      }
+      if (gridCell.classList.contains("win")) {
+        gridCell.classList.remove("win");
       }
     });
     gameLoop();
