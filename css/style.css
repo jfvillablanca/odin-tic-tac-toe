@@ -3,14 +3,16 @@
   margin: 0;
   padding: 0;
 
-  border: 1px solid orchid;
+  /* border: 1px solid orchid; */
 }
 
 :root {
   font-size: 62.5%;
 
   --color-win: #a8c686;
+  --color-warn: #E4572E;
   --color-default: #F0F0F0;
+  --color-shadow: #696969;
   --grid-size: 50rem;
 }
 
@@ -26,13 +28,24 @@ body {
 
 .popup {
   background-color: white;
+  box-shadow: 0.3rem 0.3rem 1rem 0.1rem var(--color-shadow);
   position: absolute;
   z-index: 1;
 
   height: 20rem;
-  width: 80rem;
+  width: 50rem;
   
   place-self: center;
+
+  display: grid;
+  place-items: center;
+}
+.popup > button {
+  height: 5rem;
+  width: 20rem;
+  background-color: var(--color-win);
+  color: var(--color-default);
+  font-size: 2rem;
 }
 
 .popup.hidden {
@@ -42,7 +55,7 @@ body {
 .container {
   height: inherit;
   display: grid;
-  grid-template-rows: 1fr 10fr;
+  grid-template-rows: 1fr 10fr 1fr;
 }
 
 .infoboard {
@@ -70,6 +83,25 @@ body {
   grid-template-rows: repeat(3, calc(var(--grid-size) / 3));
   grid-template-columns: repeat(3, calc(var(--grid-size) / 3));
   gap: 1rem;
+}
+
+.container > :last-child {
+  margin-bottom: 3rem;
+
+  display: grid;
+  place-items: center;
+}
+
+.container :last-child > button {
+  height: 5rem;
+  width: 20rem;
+  background-color: var(--color-warn);
+  color: var(--color-default);
+  font-size: 2rem;
+}
+
+.container > :last-child.hidden {
+  display: none;
 }
 
 .tictacgrid {
