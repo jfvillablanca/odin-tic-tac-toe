@@ -27,6 +27,7 @@ body {
 }
 
 .infoboard {
+  margin-top: 9rem;
   display: grid;
   justify-items: center;
 }
@@ -43,7 +44,7 @@ body {
   height: var(--grid-size);
   width: var(--grid-size);
 
-  place-self: center;
+  place-self: start center;
 
   display: grid;
   grid-template-rows: repeat(3, calc(var(--grid-size) / 3));
