@@ -209,6 +209,16 @@ const Gameboard = (function (doc) {
     } 
   }
 
+  const _highlightWinningCells = function(cell1, cell2, cell3) {
+    const gridCell1 = doc.querySelector(`.tictacgrid[data-row="${cell1[0]}"][data-column="${cell1[1]}"]`)
+    const gridCell2 = doc.querySelector(`.tictacgrid[data-row="${cell2[0]}"][data-column="${cell2[1]}"]`)
+    const gridCell3 = doc.querySelector(`.tictacgrid[data-row="${cell3[0]}"][data-column="${cell3[1]}"]`)
+    gridCell1.classList.add("win");
+    gridCell2.classList.add("win");
+    gridCell3.classList.add("win");
+    return;
+  }
+
   const _toggleCurrentGamePiece = function() {
     _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
     _moveCount++;
