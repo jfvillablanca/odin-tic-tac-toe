@@ -1,5 +1,6 @@
 // TODO:
 // / Game reset
+// / DOM popup winner/draw
 // - Player choose their game piece
 // - Display whose turn it is
 // / Highlight winning cells
@@ -75,14 +76,14 @@ const Gameboard = (function (doc) {
     const cellColumn = +_gridCellEvent.target.getAttribute("data-column");
     
     // HACK: condition 1 checks if the cell is free, 
-    // condition 2 checks if the game has started; see: gameStart._startGame
+    // condition 2 checks if the game has started; see: GameStartReset._startGame
     if (_gameBoardArray[cellRow][cellColumn] === 0 && _gridCellEvent.target.classList.contains("enabled")) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
       _render();
       if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN) {
         if (_checkWinCondition(cellRow, cellColumn)) {
-          console.log(`${_currentGamePiece} wins: row: ${cellRow}, col: ${cellColumn}`);
-          console.log(`movecount: ${_moveCount}`);
+          console.log(`${_currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`);
+          // console.log(`movecount: ${_moveCount}`);
           console.table(_gameBoardArray);
         }
       }
@@ -266,9 +267,9 @@ const Gameboard = (function (doc) {
   }
 
   const _highlightWinningCells = function(cell1, cell2, cell3) {
-    const gridCell1 = doc.querySelector(`.tictacgrid[data-row="${cell1[0]}"][data-column="${cell1[1]}"]`)
-    const gridCell2 = doc.querySelector(`.tictacgrid[data-row="${cell2[0]}"][data-column="${cell2[1]}"]`)
-    const gridCell3 = doc.querySelector(`.tictacgrid[data-row="${cell3[0]}"][data-column="${cell3[1]}"]`)
+    const gridCell1 = doc.querySelector(`.tictacgrid[data-row="${cell1[0]}"][data-column="${cell1[1]}"]`);
+    const gridCell2 = doc.querySelector(`.tictacgrid[data-row="${cell2[0]}"][data-column="${cell2[1]}"]`);
+    const gridCell3 = doc.querySelector(`.tictacgrid[data-row="${cell3[0]}"][data-column="${cell3[1]}"]`);
     gridCell1.classList.add("win");
     gridCell2.classList.add("win");
     gridCell3.classList.add("win");
@@ -285,15 +286,9 @@ const Gameboard = (function (doc) {
   }
 })(document || documentMock);
 
-const Player = function (playerName, gamePiece) {
+const GameStartReset = (function(doc) {
   "use strict";
-  return {
-    playerName,
-    gamePiece,
-  };
-};
 
-const gameStart = (function(doc) {
   let popupWindow;
   let startGameButton;
   let resetGameButton;
@@ -352,14 +347,10 @@ const gameStart = (function(doc) {
 
 // NOTE: Main game loop
 const gameLoop = function () {
-  gameStart.init();
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
+  GameStartReset.init();
   Gameboard.init(srcCross, srcCircle);
-
-  const player1 = Player("Alice", "X");
-  const player2 = Player("Bob", "O");
-
 }
 gameLoop();
