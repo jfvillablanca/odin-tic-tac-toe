@@ -219,23 +219,53 @@ const Player = function (playerName, gamePiece) {
 };
 
 const gameStart = (function(doc) {
+  let popupWindow;
+  let startGameButton;
+  let resetGameButton;
+  let gridCells;
+
+  const init = function() {
+    _cacheDOM();
+  }
+
   const _cacheDOM = function() {
-    const popupWindow = doc.querySelector(".popup");
-    const startGameButton = doc.querySelector(".popup > button"); 
-    _startGame(startGameButton, popupWindow);
+    popupWindow = doc.querySelector(".popup");
+    startGameButton = doc.querySelector(".popup > button"); 
+    resetGameButton = doc.querySelector(".container > :last-child");
+    gridCells = doc.querySelectorAll(".tictacgrid");
+    resetGameButton.classList.add("hidden");
+    _startGame();
   } 
 
-  const _startGame = function(button, popup) {
-      button.addEventListener("click", () => {
-      popup.classList.add("hidden");  
+  const _startGame = function() {
+    startGameButton.addEventListener("click", () => {
+      popupWindow.classList.add("hidden");  
+      resetGameButton.classList.remove("hidden");
+      gridCells.forEach((gridCell) => {
+        if (gridCell.firstChild) {
+          gridCell.removeChild(gridCell.firstChild);
+        }
+      });
+    })
+    resetGameButton.addEventListener("click", () => {
+      _resetGame();
     })
   }
-  _cacheDOM();
+
+  const _resetGame = function() {
+    popupWindow.classList.remove("hidden");  
+    resetGameButton.classList.add("hidden");
+    gameLoop();
+  }
+
+  return {
+    init,
+  }
 })(document || documentMock);
 
 // NOTE: Main game loop
 const gameLoop = function () {
-  gameStart();
+  gameStart.init();
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
