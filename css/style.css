@@ -42,8 +42,8 @@ body {
 }
 
 .gameboard {
-  height: var(--grid-size);
-  width: var(--grid-size);
+  min-height: var(--grid-size);
+  min-width: var(--grid-size);
 
   place-self: start center;
 
