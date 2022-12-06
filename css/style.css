@@ -17,8 +17,10 @@ body {
 }
 
 .container {
-  height: 75%;
-  width: 75%;
+  height: inherit;
+  display: grid;
+  grid-template-rows: 1fr 10fr;
+}
 
   display: grid;
 }
