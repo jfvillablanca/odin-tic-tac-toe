@@ -22,7 +22,18 @@ body {
   grid-template-rows: 1fr 10fr;
 }
 
+.infoboard {
   display: grid;
+  justify-items: center;
+}
+
+.infoboard h1 {
+  font-size: 4rem;
+}
+
+
+.infoboard h2 {
+  font-size: 3rem;
 }
 
 .gameboard {
