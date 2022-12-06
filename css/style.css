@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
 
-  border: 1px solid orchid;
+  /* border: 1px solid orchid; */
 }
 
 :root {
@@ -31,13 +31,11 @@ body {
   font-size: 4rem;
 }
 
-
 .infoboard h2 {
   font-size: 3rem;
 }
 
 .gameboard {
-  --grid-size: 50rem;
   height: var(--grid-size);
   width: var(--grid-size);
 
