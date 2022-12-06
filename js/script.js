@@ -218,8 +218,24 @@ const Player = function (playerName, gamePiece) {
   };
 };
 
+const gameStart = (function(doc) {
+  const _cacheDOM = function() {
+    const popupWindow = doc.querySelector(".popup");
+    const startGameButton = doc.querySelector(".popup > button"); 
+    _startGame(startGameButton, popupWindow);
+  } 
+
+  const _startGame = function(button, popup) {
+      button.addEventListener("click", () => {
+      popup.classList.add("hidden");  
+    })
+  }
+  _cacheDOM();
+})(document || documentMock);
+
+// NOTE: Main game loop
 const gameLoop = function () {
-  // NOTE: Main game loop
+  gameStart();
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
