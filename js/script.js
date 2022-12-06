@@ -13,6 +13,11 @@ const documentMock = (() => ({
 
 const Gameboard = (function (doc) {
   "use strict";
+
+  let _gridCells = null;
+  let _gamePieceX = null;
+  let _gamePieceO = null;
+
   // NOTE: It takes 5 moves to win the game. 
   // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
   // player 1 wins after placing their piece 3 times.
@@ -21,11 +26,7 @@ const Gameboard = (function (doc) {
 
   // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
   let _moveCount = 1;
-
   let _currentGamePiece = "X";
-  let _gridCells = null;
-  let _gamePieceX = null;
-  let _gamePieceO = null;
   const _gameBoardArray = [
     [0, 0, 0],
     [0, 0, 0],
@@ -35,6 +36,7 @@ const Gameboard = (function (doc) {
   const init = function(srcX, srcO) {
     _cacheDOM(srcX, srcO);
     _moveCount = 1;
+    _currentGamePiece = "X";
     for (const row in _gameBoardArray) {
       _gameBoardArray[row] = [0, 0, 0];
     }
