@@ -8,6 +8,10 @@
 
 :root {
   font-size: 62.5%;
+
+  --color-win: #a8c686;
+  --color-default: #F0F0F0;
+  --grid-size: 50rem;
 }
 
 body {
@@ -44,6 +48,11 @@ body {
   display: grid;
   grid-template-rows: repeat(3, calc(var(--grid-size) / 3));
   grid-template-columns: repeat(3, calc(var(--grid-size) / 3));
+  gap: 1rem;
+}
+
+.tictacgrid {
+  background-color: var(--color-default);
 }
 
 .tictacgrid > img {
@@ -51,4 +60,8 @@ body {
   max-width: 100%;
 
   margin: 2rem;
+}
+
+.tictacgrid.win {
+  background-color: var(--color-win);
 }
