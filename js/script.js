@@ -3,7 +3,7 @@
 // - Player choose their game piece
 // - Display whose turn it is
 // - Highlight winning cells
-// - Prettify the game board in css
+// / Prettify the game board in css
 
 const documentMock = (() => ({
   querySelector: (_selector) => ({
@@ -18,8 +18,10 @@ const Gameboard = (function (doc) {
   // player 1 wins after placing their piece 3 times.
   const MINIMUM_MOVE_COUNT_TO_WIN = 5;
   const MAXIMUM_MOVE_COUNT = 9;
+
   // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
   let _moveCount = 1;
+
   let _currentGamePiece = "X";
   let _gridCells = null;
   let _gamePieceX = null;
@@ -32,6 +34,10 @@ const Gameboard = (function (doc) {
 
   const init = function(srcX, srcO) {
     _cacheDOM(srcX, srcO);
+    _moveCount = 1;
+    for (const row in _gameBoardArray) {
+      _gameBoardArray[row] = [0, 0, 0];
+    }
   }
 
   const _cacheDOM = function(srcX, srcO) {
@@ -65,7 +71,10 @@ const Gameboard = (function (doc) {
   const _addToGameBoard = function(_gridCellEvent) {
     const cellRow = +_gridCellEvent.target.getAttribute("data-row");
     const cellColumn = +_gridCellEvent.target.getAttribute("data-column");
-    if (_gameBoardArray[cellRow][cellColumn] === 0) {
+    
+    // HACK: condition 1 checks if the cell is free, 
+    // condition 2 checks if the game has started; see: gameStart._startGame
+    if (_gameBoardArray[cellRow][cellColumn] === 0 && _gridCellEvent.target.classList.contains("enabled")) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
       _render();
       if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN) {
@@ -241,12 +250,14 @@ const gameStart = (function(doc) {
     startGameButton.addEventListener("click", () => {
       popupWindow.classList.add("hidden");  
       resetGameButton.classList.remove("hidden");
+
+      // HACK: the .enabled class is a toggle to see
+      // if the gridCell will start rendering gamepieces
       gridCells.forEach((gridCell) => {
-        if (gridCell.firstChild) {
-          gridCell.removeChild(gridCell.firstChild);
-        }
+        gridCell.classList.add("enabled");
       });
     })
+
     resetGameButton.addEventListener("click", () => {
       _resetGame();
     })
@@ -255,6 +266,13 @@ const gameStart = (function(doc) {
   const _resetGame = function() {
     popupWindow.classList.remove("hidden");  
     resetGameButton.classList.add("hidden");
+
+    gridCells.forEach((gridCell) => {
+      gridCell.classList.remove("enabled");
+      if (gridCell.firstChild) {
+        gridCell.removeChild(gridCell.firstChild);
+      }
+    });
     gameLoop();
   }
 
