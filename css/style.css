@@ -27,17 +27,18 @@ body {
 }
 
 .infoboard {
-  margin-top: 9rem;
+  margin-top: 5rem;
   display: grid;
   justify-items: center;
 }
 
 .infoboard h1 {
-  font-size: 4rem;
+  font-size: 5rem;
 }
 
 .infoboard h2 {
   font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
 .gameboard {
