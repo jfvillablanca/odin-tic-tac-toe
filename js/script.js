@@ -18,6 +18,10 @@ const Gameboard = (function (doc) {
   let _gridCells = null;
   let _gamePieceX = null;
   let _gamePieceO = null;
+  let _gameBanner;
+  let _gameScore;
+  let _scoreX = 0;
+  let _scoreO = 0;
 
   // NOTE: It takes 5 moves to win the game. 
   // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
@@ -34,6 +38,9 @@ const Gameboard = (function (doc) {
     [0, 0, 0],
   ];
 
+  let _srcAssetX;
+  let _srcAssetO;
+
   const init = function(srcX, srcO) {
     _cacheDOM(srcX, srcO);
     _moveCount = 1;
@@ -44,18 +51,26 @@ const Gameboard = (function (doc) {
   }
 
   const _cacheDOM = function(srcX, srcO) {
+    _srcAssetX = srcX;
+    _srcAssetO = srcO;
     _gamePieceX = doc.createElement("img");
-    _gamePieceX.setAttribute("src", srcX);
+    _gamePieceX.setAttribute("src", _srcAssetX);
     _gamePieceO = doc.createElement("img");
-    _gamePieceO.setAttribute("src", srcO);
+    _gamePieceO.setAttribute("src", _srcAssetO);
     _gridCells = doc.querySelectorAll(".tictacgrid");
 
     _gridCells.forEach((_gridCell) => {
       _gridCell.addEventListener("click", _addToGameBoard);
     });
+    
+    _gameBanner = doc.querySelector(".gamebanner");
+    _gameScore = doc.querySelector(".score");
   }
 
   const _render = function() {
+    _gameBanner.textContent = `Your turn: ${_currentGamePiece}`;
+    _gameScore.textContent = `X: ${_scoreX}  O: ${_scoreO} `;
+
     [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
       const column = +_gridCell.getAttribute("data-column");
@@ -78,20 +93,43 @@ const Gameboard = (function (doc) {
     // HACK: condition 1 checks if the cell is free, 
     // condition 2 checks if the game has started; see: GameStartReset._startGame
     if (_gameBoardArray[cellRow][cellColumn] === 0 && _gridCellEvent.target.classList.contains("enabled")) {
-      _gameBoardArray[cellRow].splice(cellColumn, 1, currentGamePiece);
+      _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
+
+      _toggleCurrentGamePiece();
+      _render();
 
       if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN && _checkWinCondition(cellRow, cellColumn)) {
-        console.log(`${currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`);
+        console.log(`${_currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`);
         // console.log(`movecount: ${_moveCount}`);
         console.table(_gameBoardArray);
-        _registerWin();
+        _signalThatMatchFinished(`${_currentGamePiece}`);
       }
       if (_moveCount === MAXIMUM_MOVE_COUNT) {
         console.log("Game draw");
+        _signalThatMatchFinished("draw");
       }
-      _toggleCurrentGamePiece();
-      _render();
     } 
+  }
+
+  const _signalThatMatchFinished = function(winner) {
+  // const _signalThatMatchFinished = function(winner, _newMatch) {
+    if (winner === "X") {
+      _scoreX++;
+    }
+    else if (winner === "O") {
+      _scoreO++;
+    }
+    // _newMatch();
+    Gameboard.init(_srcAssetX, _srcAssetO);
+  }
+
+  // const _newMatch = function() {
+  //   Gameboard.init(_srcAssetX, _srcAssetO);
+  // }
+
+  const _toggleCurrentGamePiece = function() {
+    _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
+    _moveCount++;
   }
 
   const _checkWinCondition = function (i, j) {
@@ -276,11 +314,6 @@ const Gameboard = (function (doc) {
     return;
   }
 
-  const _toggleCurrentGamePiece = function() {
-    _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
-    _moveCount++;
-  }
-
   return {
     init,
   }
@@ -294,13 +327,10 @@ const GameStartReset = (function(doc) {
   let _resetGameButton;
   let _gridCells;
   let _gameBanner;
-  let _gameScore;
-  let _currentGamePiece;
 
   const init = function(srcX, srcO) {
     _cacheDOM();
     Gameboard.init(srcX, srcO);
-    _currentGamePiece = Gameboard.currentGamePiece;
   }
 
   const _cacheDOM = function() {
@@ -308,7 +338,6 @@ const GameStartReset = (function(doc) {
     _startGameButton = doc.querySelector(".popup > button"); 
     _resetGameButton = doc.querySelector(".container > :last-child");
     _gameBanner = doc.querySelector(".gamebanner");
-    _gameScore = doc.querySelector(".score");
     _gridCells = doc.querySelectorAll(".tictacgrid");
     _resetGameButton.classList.add("hidden");
     _initializeGame();
@@ -320,8 +349,6 @@ const GameStartReset = (function(doc) {
     _startGameButton.addEventListener("click", () => {
       _popupWindow.classList.add("hidden");  
       _resetGameButton.classList.remove("hidden");
-      _gameBanner.textContent = `Your turn: ${_currentGamePiece}`;
-      _gameScore.textContent = `X: _  O: _ `;
 
       // HACK: the .enabled class is a toggle to see
       // if the gridCell will start rendering gamepieces
