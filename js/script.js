@@ -78,19 +78,19 @@ const Gameboard = (function (doc) {
     // HACK: condition 1 checks if the cell is free, 
     // condition 2 checks if the game has started; see: GameStartReset._startGame
     if (_gameBoardArray[cellRow][cellColumn] === 0 && _gridCellEvent.target.classList.contains("enabled")) {
-      _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
-      _render();
-      if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN) {
-        if (_checkWinCondition(cellRow, cellColumn)) {
-          console.log(`${_currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`);
-          // console.log(`movecount: ${_moveCount}`);
-          console.table(_gameBoardArray);
-        }
+      _gameBoardArray[cellRow].splice(cellColumn, 1, currentGamePiece);
+
+      if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN && _checkWinCondition(cellRow, cellColumn)) {
+        console.log(`${currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`);
+        // console.log(`movecount: ${_moveCount}`);
+        console.table(_gameBoardArray);
+        _registerWin();
       }
       if (_moveCount === MAXIMUM_MOVE_COUNT) {
         console.log("Game draw");
       }
       _toggleCurrentGamePiece();
+      _render();
     } 
   }
 
