@@ -289,47 +289,57 @@ const Gameboard = (function (doc) {
 const GameStartReset = (function(doc) {
   "use strict";
 
-  let popupWindow;
-  let startGameButton;
-  let resetGameButton;
-  let gridCells;
+  let _popupWindow;
+  let _startGameButton;
+  let _resetGameButton;
+  let _gridCells;
+  let _gameBanner;
+  let _gameScore;
+  let _currentGamePiece;
 
   const init = function(srcX, srcO) {
     _cacheDOM();
     Gameboard.init(srcX, srcO);
+    _currentGamePiece = Gameboard.currentGamePiece;
   }
 
   const _cacheDOM = function() {
-    popupWindow = doc.querySelector(".popup");
-    startGameButton = doc.querySelector(".popup > button"); 
-    resetGameButton = doc.querySelector(".container > :last-child");
-    gridCells = doc.querySelectorAll(".tictacgrid");
-    resetGameButton.classList.add("hidden");
-    _startGame();
+    _popupWindow = doc.querySelector(".popup");
+    _startGameButton = doc.querySelector(".popup > button"); 
+    _resetGameButton = doc.querySelector(".container > :last-child");
+    _gameBanner = doc.querySelector(".gamebanner");
+    _gameScore = doc.querySelector(".score");
+    _gridCells = doc.querySelectorAll(".tictacgrid");
+    _resetGameButton.classList.add("hidden");
+    _initializeGame();
   } 
 
-  const _startGame = function() {
-    startGameButton.addEventListener("click", () => {
-      popupWindow.classList.add("hidden");  
-      resetGameButton.classList.remove("hidden");
+  const _initializeGame = function() {
+    _gameBanner.textContent = "Hello player";
+
+    _startGameButton.addEventListener("click", () => {
+      _popupWindow.classList.add("hidden");  
+      _resetGameButton.classList.remove("hidden");
+      _gameBanner.textContent = `Your turn: ${_currentGamePiece}`;
+      _gameScore.textContent = `X: _  O: _ `;
 
       // HACK: the .enabled class is a toggle to see
       // if the gridCell will start rendering gamepieces
-      gridCells.forEach((gridCell) => {
+      _gridCells.forEach((gridCell) => {
         gridCell.classList.add("enabled");
       });
     })
 
-    resetGameButton.addEventListener("click", () => {
+    _resetGameButton.addEventListener("click", () => {
       _resetGame();
     })
   }
 
   const _resetGame = function() {
-    popupWindow.classList.remove("hidden");  
-    resetGameButton.classList.add("hidden");
+    _popupWindow.classList.remove("hidden");  
+    _resetGameButton.classList.add("hidden");
 
-    gridCells.forEach((gridCell) => {
+    _gridCells.forEach((gridCell) => {
       gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
         gridCell.removeChild(gridCell.firstChild);
