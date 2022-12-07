@@ -13,6 +13,7 @@
   --color-warn: #E4572E;
   --color-default: #F0F0F0;
   --color-shadow: #696969;
+  --color-next: #407076;
   --grid-size: 50rem;
 }
 
@@ -40,6 +41,7 @@ body {
   display: grid;
   place-items: center;
 }
+
 .popup > button {
   height: 5rem;
   width: 20rem;
@@ -55,7 +57,7 @@ body {
 .container {
   height: inherit;
   display: grid;
-  grid-template-rows: 1fr 10fr 1fr;
+  grid-template-rows: 1fr 10fr 1fr 1fr;
 }
 
 .infoboard {
@@ -85,22 +87,29 @@ body {
   gap: 1rem;
 }
 
+.container > :nth-child(3),
 .container > :last-child {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 
   display: grid;
   place-items: center;
 }
 
-.container :last-child > button {
+.container button {
   height: 5rem;
   width: 20rem;
-  background-color: var(--color-warn);
   color: var(--color-default);
   font-size: 2rem;
 }
+.container button.resetgame {
+  background-color: var(--color-warn);
+}
 
-.container > :last-child.hidden {
+.container button.nextmatch {
+  background-color: var(--color-next);
+}
+
+.container .hidden {
   display: none;
 }
 
