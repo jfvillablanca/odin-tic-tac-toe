@@ -17,9 +17,9 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
-  let _gridCells = null;
-  let _gamePieceX = null;
-  let _gamePieceO = null;
+  let _gridCells;
+  let _gamePieceX;
+  let _gamePieceO;
   let _gameBanner;
   let _gameScore;
   let _scoreX = 0;
@@ -42,6 +42,7 @@ const Gameboard = (function (doc) {
 
   let _srcAssetX;
   let _srcAssetO;
+  let _buttonNextMatch;
 
   const init = function (srcX, srcO) {
     _moveCount = 1;
@@ -68,10 +69,12 @@ const Gameboard = (function (doc) {
 
     _gameBanner = doc.querySelector(".gamebanner");
     _gameScore = doc.querySelector(".score");
+    _buttonNextMatch = doc.querySelector(".nextmatch");
+    _buttonNextMatch.parentNode.classList.add("hidden");
   };
 
   const _render = function () {
-    _gameBanner.textContent = `Your turn: ${_currentGamePiece}`;
+    _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
     _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
     //
     [..._gridCells].forEach((_gridCell) => {
@@ -129,7 +132,7 @@ const Gameboard = (function (doc) {
   };
 
   const _signalThatMatchFinished = function (winner) {
-    // const _signalThatMatchFinished = function(winner, _newMatch) {
+
     if (winner === "X") {
       _scoreX++;
       _gameBanner.textContent = "X wins";
@@ -138,8 +141,11 @@ const Gameboard = (function (doc) {
       _gameBanner.textContent = "O wins";
     }
     _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
-    _sleep(2000);
-    _newMatch();
+
+    _buttonNextMatch.parentNode.classList.remove("hidden");
+    _buttonNextMatch.addEventListener("click", () => {
+      _newMatch();
+    })
   };
 
   const _newMatch = function () {
@@ -152,16 +158,9 @@ const Gameboard = (function (doc) {
         gridCell.classList.remove("win");
       }
     });
+
     Gameboard.init(_srcAssetX, _srcAssetO);
   };
-
-  const _sleep = function (milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }
 
   const _toggleCurrentGamePiece = function () {
     _currentGamePiece === "X"
