@@ -294,8 +294,9 @@ const GameStartReset = (function(doc) {
   let resetGameButton;
   let gridCells;
 
-  const init = function() {
+  const init = function(srcX, srcO) {
     _cacheDOM();
+    Gameboard.init(srcX, srcO);
   }
 
   const _cacheDOM = function() {
@@ -350,7 +351,7 @@ const gameLoop = function () {
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
-  GameStartReset.init();
-  Gameboard.init(srcCross, srcCircle);
+  GameStartReset.init(srcCross, srcCircle);
+  // Gameboard.init(srcCross, srcCircle);
 }
 gameLoop();
