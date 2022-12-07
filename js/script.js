@@ -1,6 +1,7 @@
 // TODO:
 // / Game reset
-// / DOM popup winner/draw
+// - DOM popup winner/draw
+// / Scores
 // - Player choose their game piece
 // - Display whose turn it is
 // / Highlight winning cells
@@ -41,14 +42,14 @@ const Gameboard = (function (doc) {
   let _srcAssetX;
   let _srcAssetO;
 
-  const init = function(srcX, srcO) {
-    _cacheDOM(srcX, srcO);
+  const init = function (srcX, srcO) {
     _moveCount = 1;
     _currentGamePiece = "X";
     for (const row in _gameBoardArray) {
       _gameBoardArray[row] = [0, 0, 0];
     }
-  }
+    _cacheDOM(srcX, srcO);
+  };
 
   const _cacheDOM = function(srcX, srcO) {
     _srcAssetX = srcX;
@@ -69,8 +70,8 @@ const Gameboard = (function (doc) {
 
   const _render = function() {
     _gameBanner.textContent = `Your turn: ${_currentGamePiece}`;
-    _gameScore.textContent = `X: ${_scoreX}  O: ${_scoreO} `;
-
+    _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
+    //
     [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
       const column = +_gridCell.getAttribute("data-column");
@@ -95,7 +96,6 @@ const Gameboard = (function (doc) {
     if (_gameBoardArray[cellRow][cellColumn] === 0 && _gridCellEvent.target.classList.contains("enabled")) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
 
-      _toggleCurrentGamePiece();
       _render();
 
       if (_moveCount >= MINIMUM_MOVE_COUNT_TO_WIN && _checkWinCondition(cellRow, cellColumn)) {
@@ -115,17 +115,36 @@ const Gameboard = (function (doc) {
   // const _signalThatMatchFinished = function(winner, _newMatch) {
     if (winner === "X") {
       _scoreX++;
-    }
-    else if (winner === "O") {
+      _gameBanner.textContent = "X wins";
+    } else if (winner === "O") {
       _scoreO++;
+      _gameBanner.textContent = "O wins";
     }
-    // _newMatch();
+    _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
+    _sleep(2000);
+    _newMatch();
+  };
+
+  const _newMatch = function () {
+    _gridCells.forEach((gridCell) => {
+      gridCell.classList.remove("enabled");
+      if (gridCell.firstChild) {
+        gridCell.removeChild(gridCell.firstChild);
+      }
+      if (gridCell.classList.contains("win")) {
+        gridCell.classList.remove("win");
+      }
+    });
     Gameboard.init(_srcAssetX, _srcAssetO);
   }
 
-  // const _newMatch = function() {
-  //   Gameboard.init(_srcAssetX, _srcAssetO);
-  // }
+  const _sleep = function (milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
 
   const _toggleCurrentGamePiece = function() {
     _currentGamePiece === "X" ? _currentGamePiece = "O" : _currentGamePiece = "X";
