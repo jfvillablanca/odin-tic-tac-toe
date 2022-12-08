@@ -162,6 +162,7 @@ const Gameboard = (function (doc) {
     ) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
 
+      _toggleCurrentGamePiece();
       _render();
 
       if (
@@ -171,15 +172,15 @@ const Gameboard = (function (doc) {
         console.log(
           `${_currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`
         );
-        // console.log(`movecount: ${_moveCount}`);
         console.table(_gameBoardArray);
+        // Negate the inversion of current game piece to record the actual winner
+        _toggleCurrentGamePiece();
         _signalThatMatchFinished(`${_currentGamePiece}`);
       }
       if (_moveCount === MAXIMUM_MOVE_COUNT) {
         console.log("Game draw");
         _signalThatMatchFinished("draw");
       }
-      _toggleCurrentGamePiece();
     }
   };
 
