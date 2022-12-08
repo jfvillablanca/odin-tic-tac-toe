@@ -22,8 +22,8 @@ const Gameboard = (function (doc) {
 
   // NOTE: Element selectors
   let _popupWindow;
-  let _startGameButton;
-  let _resetGameButton;
+  let _buttonStartGame;
+  let _buttonResetGame;
   let _gameBanner;
   let _gameScore;
   let _gameboard;
@@ -64,8 +64,8 @@ const Gameboard = (function (doc) {
 
   const _cacheDOM = function (srcX, srcO) {
     _popupWindow = doc.querySelector(".popup");
-    _startGameButton = doc.querySelector(".popup > button");
-    _resetGameButton = doc.querySelector(".container > :last-child");
+    _buttonStartGame = doc.querySelector(".popup > button");
+    _buttonResetGame = doc.querySelector(".container > :last-child");
     _gameBanner = doc.querySelector(".gamebanner");
     _gameScore = doc.querySelector(".score");
     _gameboard = doc.querySelector(".gameboard");
@@ -85,7 +85,52 @@ const Gameboard = (function (doc) {
     // _gameboard.classList.add("enabled");
 
     _buttonNextMatch = doc.querySelector(".nextmatch");
+  };
+
+  const _newGame = function() {
+    _updateGameBanner("Hello player");
+    _buttonResetGame.classList.add("hidden");
+
+    _buttonStartGame.addEventListener("click", () => {
+      _updateGameBanner();
+      _popupWindow.classList.add("hidden");
+      _gameboard.classList.add("enabled");
+      _buttonResetGame.classList.remove("hidden");
+    });
+
+    _buttonResetGame.addEventListener("click", () => {
+      _resetGame();
+    });
+  }
+
+  const _newMatch = function () {
+    _moveCount = 1;
+    _currentGamePiece = "X";
+    for (const row in _gameBoardArray) {
+      _gameBoardArray[row] = [0, 0, 0];
+    }
     _buttonNextMatch.parentNode.classList.add("hidden");
+
+    _gridCells.forEach((_gridCell) => {
+      _gridCell.addEventListener("click", _addToGameBoard);
+    });
+
+  };
+
+  const _resetGame = function () {
+    _popupWindow.classList.remove("hidden");
+    _gameboard.classList.remove("enabled");
+    _buttonResetGame.classList.add("hidden");
+
+    _gridCells.forEach((gridCell) => {
+      if (gridCell.firstChild) {
+        gridCell.removeChild(gridCell.firstChild);
+      }
+      if (gridCell.classList.contains("win")) {
+        gridCell.classList.remove("win");
+      }
+    });
+    gameLoop();
   };
 
   const _render = function () {
