@@ -1,7 +1,7 @@
 // TODO:
 // / Game reset
 // - Fix reset game (partial)
-// - DOM popup winner/draw (partial)
+// / DOM popup winner/draw (not  popup, gamebanner update instead) 
 // / Scores
 // - Player choose their game piece
 // / Display whose turn it is (Partial)
@@ -173,11 +173,12 @@ const Gameboard = (function (doc) {
           `${_currentGamePiece} wins; winning move: [row: ${cellRow}, col: ${cellColumn}]`
         );
         console.table(_gameBoardArray);
-        // Negate the inversion of current game piece to record the actual winner
+        // Negate the _toggleCurrentGamePiece() to record the actual winner
         _toggleCurrentGamePiece();
         _signalThatMatchFinished(`${_currentGamePiece}`);
       }
-      if (_moveCount === MAXIMUM_MOVE_COUNT) {
+      // Had to use > instead of === since _toggleCurrentGamePiece increments _moveCount early
+      else if (_moveCount > MAXIMUM_MOVE_COUNT) {
         console.log("Game draw");
         _signalThatMatchFinished("draw");
       }
@@ -192,7 +193,7 @@ const Gameboard = (function (doc) {
     } else if (winner === "O") {
       _scoreO++;
       _updateGameBanner("O wins");
-    }
+    } else _updateGameBanner("Game draw");
     _gameboard.classList.remove("enabled")
 
     _buttonNextMatch.parentNode.classList.remove("hidden");
