@@ -1,6 +1,7 @@
 // TODO:
 // / Game reset
-// - DOM popup winner/draw
+// - Fix reset game
+// - DOM popup winner/draw (partial)
 // / Scores
 // - Player choose their game piece
 // / Display whose turn it is (Partial)
@@ -77,11 +78,14 @@ const Gameboard = (function (doc) {
     _gameScore = doc.querySelector(".score");
     _buttonNextMatch = doc.querySelector(".nextmatch");
     _buttonNextMatch.parentNode.classList.add("hidden");
+    
+    updateGameBanner();
+    // _gameBanner.textContent = `Your turn ${_currentGamePiece}`;
   };
 
   const _render = function () {
-    _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
-    _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
+    // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
+    updateGameBanner();
     //
     [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
@@ -141,10 +145,10 @@ const Gameboard = (function (doc) {
 
     if (winner === "X") {
       _scoreX++;
-      _gameBanner.textContent = "X wins";
+      updateGameBanner("X wins");
     } else if (winner === "O") {
       _scoreO++;
-      _gameBanner.textContent = "O wins";
+      updateGameBanner("O wins");
     }
     _gameboard.classList.remove("enabled")
 
@@ -156,6 +160,7 @@ const Gameboard = (function (doc) {
   };
 
   const _newMatch = function () {
+    updateGameBanner();
     _gridCells.forEach((gridCell) => {
       // gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
@@ -384,7 +389,16 @@ const Gameboard = (function (doc) {
     return;
   };
 
+  const updateGameBanner = function(announcement) {
+    if(_gameboard.classList.contains("enabled")) {
+      // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
+      _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
+    }
+    _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
+  }
+
   return {
+    updateGameBanner,
     init,
   };
 })(document || documentMock);
