@@ -1,13 +1,13 @@
 // TODO:
 // / Game reset
-// - Fix reset game (partial)
+// / Fix reset game
 // / DOM popup winner/draw (not  popup, gamebanner update instead) 
 // / Scores
 // - Player choose their game piece
 // / Display whose turn it is (Partial)
 // / Highlight winning cells
 // / Prettify the game board in css
-// - Rebase the branch back to main
+// / Rebase the branch back to main
 // / Refactor HACK of checking if gridcellenabled, 
 // use another way of indicating if game has activated
 
