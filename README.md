@@ -29,4 +29,5 @@ This project uses [Skeleton](https://github.com/dhg/Skeleton) for boilerplate
     1. If the currently added piece is in row: 1, col: 1 (middle of the board), check if win,
     2. else if, the currently added piece is in row: 0, col: 0 OR ... (corners of the board), check if win,
     3. else, the currently added piece is in row: 1, col: 0 OR ... (edges of the board), check if win.
-    4. If no win condition AND `_moveCount` === 9 (max no. of moves), then game is draw.
+    4. If win condition, highlight the winning cells.
+    5. If no win condition AND `_moveCount` === 9 (max no. of moves), then game is draw.
