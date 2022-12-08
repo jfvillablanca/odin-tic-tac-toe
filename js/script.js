@@ -407,80 +407,12 @@ const Gameboard = (function (doc) {
   };
 })(document || documentMock);
 
-const GameStartReset = (function (doc) {
-  "use strict";
-
-  let _popupWindow;
-  let _startGameButton;
-  let _resetGameButton;
-  let _gameboard;
-  let _gridCells;
-  let _gameBanner;
-
-  const init = function (srcX, srcO) {
-    _cacheDOM();
-    Gameboard.init(srcX, srcO);
-  };
-
-  const _cacheDOM = function () {
-    _popupWindow = doc.querySelector(".popup");
-    _startGameButton = doc.querySelector(".popup > button");
-    _resetGameButton = doc.querySelector(".container > :last-child");
-    _gameBanner = doc.querySelector(".gamebanner");
-    _gameboard = doc.querySelector(".gameboard");
-    _gridCells = doc.querySelectorAll(".tictacgrid");
-    _resetGameButton.classList.add("hidden");
-    _initializeGame();
-  };
-
-  const _initializeGame = function () {
-    _gameBanner.textContent = "Hello player";
-
-    _startGameButton.addEventListener("click", () => {
-      _popupWindow.classList.add("hidden");
-      _resetGameButton.classList.remove("hidden");
-
-      // HACK: the .enabled class is a toggle to see
-      // if the gridCell will start rendering gamepieces
-      _gameboard.classList.add("enabled");
-      // _gridCells.forEach((gridCell) => {
-      //   gridCell.classList.add("enabled");
-      // });
-    });
-
-    _resetGameButton.addEventListener("click", () => {
-      _resetGame();
-    });
-  };
-
-  const _resetGame = function () {
-    _popupWindow.classList.remove("hidden");
-    _resetGameButton.classList.add("hidden");
-    _gameboard.classList.remove("enabled");
-
-    _gridCells.forEach((gridCell) => {
-      // gridCell.classList.remove("enabled");
-      if (gridCell.firstChild) {
-        gridCell.removeChild(gridCell.firstChild);
-      }
-      if (gridCell.classList.contains("win")) {
-        gridCell.classList.remove("win");
-      }
-    });
-    gameLoop();
-  };
-
-  return {
-    init,
-  };
-})(document || documentMock);
-
 // NOTE: Main game loop
 const gameLoop = function () {
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
-  GameStartReset.init(srcCross, srcCircle);
-  // Gameboard.init(srcCross, srcCircle);
+  // GameStartReset.init(srcCross, srcCircle);
+  Gameboard.init(srcCross, srcCircle);
 };
 gameLoop();
