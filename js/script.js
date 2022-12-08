@@ -1,6 +1,6 @@
 // TODO:
 // / Game reset
-// - Fix reset game
+// - Fix reset game (partial)
 // - DOM popup winner/draw (partial)
 // / Scores
 // - Player choose their game piece
@@ -8,7 +8,7 @@
 // / Highlight winning cells
 // / Prettify the game board in css
 // - Rebase the branch back to main
-// - Refactor HACK of checking if gridcellenabled, 
+// / Refactor HACK of checking if gridcellenabled, 
 // use another way of indicating if game has activated
 
 const documentMock = (() => ({
@@ -53,13 +53,11 @@ const Gameboard = (function (doc) {
 
 
   const init = function (srcX, srcO) {
-    _moveCount = 1;
-    _currentGamePiece = "X";
-    for (const row in _gameBoardArray) {
-      _gameBoardArray[row] = [0, 0, 0];
-    }
+    _scoreX = 0;
+    _scoreO = 0;
     _cacheDOM(srcX, srcO);
-    _updateGameBanner();
+    _newGame();
+    _newMatch();
   };
 
   const _cacheDOM = function (srcX, srcO) {
@@ -71,10 +69,6 @@ const Gameboard = (function (doc) {
     _gameboard = doc.querySelector(".gameboard");
 
     _gridCells = doc.querySelectorAll(".tictacgrid");
-    _gridCells.forEach((_gridCell) => {
-      _gridCell.addEventListener("click", _addToGameBoard);
-      // _gridCell.classList.add("enabled");
-    });
 
     _srcAssetX = srcX;
     _srcAssetO = srcO;
@@ -134,9 +128,7 @@ const Gameboard = (function (doc) {
   };
 
   const _render = function () {
-    // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
     _updateGameBanner();
-    //
     [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
       const column = +_gridCell.getAttribute("data-column");
@@ -205,14 +197,14 @@ const Gameboard = (function (doc) {
     _buttonNextMatch.parentNode.classList.remove("hidden");
     _buttonNextMatch.addEventListener("click", () => {
       _gameboard.classList.add("enabled")
-      _newMatch();
+      _nextMatch();
     })
   };
 
-  const _newMatch = function () {
+  const _nextMatch = function () {
     _updateGameBanner();
     _gridCells.forEach((gridCell) => {
-      // gridCell.classList.remove("enabled");
+      gridCell.removeEventListener("click", _addToGameBoard);
       if (gridCell.firstChild) {
         gridCell.removeChild(gridCell.firstChild);
       }
@@ -221,7 +213,8 @@ const Gameboard = (function (doc) {
       }
     });
 
-    Gameboard.init(_srcAssetX, _srcAssetO);
+    // Gameboard.init(_srcAssetX, _srcAssetO);
+    _newMatch();
   };
 
   const _toggleCurrentGamePiece = function () {
@@ -440,10 +433,11 @@ const Gameboard = (function (doc) {
   };
 
   const _updateGameBanner = function(announcement) {
-    if(_gameboard.classList.contains("enabled")) {
-      // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
-      _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
-    }
+    // _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
+    _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
+    // if(_gameboard.classList.contains("enabled")) {
+    //   // _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
+    // }
     _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
   }
 
