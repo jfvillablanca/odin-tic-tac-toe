@@ -20,33 +20,37 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
+  // NOTE: Element selectors
+  let _popupWindow;
+  let _startGameButton;
+  let _resetGameButton;
+  let _gameBanner;
+  let _gameScore;
   let _gameboard;
   let _gridCells;
   let _gamePieceX;
   let _gamePieceO;
-  let _gameBanner;
-  let _gameScore;
+  let _buttonNextMatch;
+
+  // NOTE: Game variables
+  let _srcAssetX;
+  let _srcAssetO;
   let _scoreX = 0;
   let _scoreO = 0;
-
-  // NOTE: It takes 5 moves to win the game.
-  // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
-  // player 1 wins after placing their piece 3 times.
-  const MINIMUM_MOVE_COUNT_TO_WIN = 5;
-  const MAXIMUM_MOVE_COUNT = 9;
-
-  // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
-  let _moveCount = 1;
   let _currentGamePiece = "X";
   const _gameBoardArray = [
     [0, 0, 0],
     [0, 0, 0],
     [0, 0, 0],
   ];
+  // NOTE: It takes 5 moves to win the game.
+  // Example: If player 1 tries to win ASAP and player 2 plays ignorantly,
+  // player 1 wins after placing their piece 3 times.
+  const MINIMUM_MOVE_COUNT_TO_WIN = 5;
+  const MAXIMUM_MOVE_COUNT = 9;
+  // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
+  let _moveCount = 1;
 
-  let _srcAssetX;
-  let _srcAssetO;
-  let _buttonNextMatch;
 
   const init = function (srcX, srcO) {
     _moveCount = 1;
@@ -55,18 +59,16 @@ const Gameboard = (function (doc) {
       _gameBoardArray[row] = [0, 0, 0];
     }
     _cacheDOM(srcX, srcO);
+    _updateGameBanner();
   };
 
   const _cacheDOM = function (srcX, srcO) {
-    _srcAssetX = srcX;
-    _srcAssetO = srcO;
-    _gamePieceX = doc.createElement("img");
-    _gamePieceX.setAttribute("src", _srcAssetX);
-    _gamePieceO = doc.createElement("img");
-    _gamePieceO.setAttribute("src", _srcAssetO);
+    _popupWindow = doc.querySelector(".popup");
+    _startGameButton = doc.querySelector(".popup > button");
+    _resetGameButton = doc.querySelector(".container > :last-child");
+    _gameBanner = doc.querySelector(".gamebanner");
+    _gameScore = doc.querySelector(".score");
     _gameboard = doc.querySelector(".gameboard");
-    // _gameboard.classList.add("enabled");
-
 
     _gridCells = doc.querySelectorAll(".tictacgrid");
     _gridCells.forEach((_gridCell) => {
@@ -74,13 +76,16 @@ const Gameboard = (function (doc) {
       // _gridCell.classList.add("enabled");
     });
 
-    _gameBanner = doc.querySelector(".gamebanner");
-    _gameScore = doc.querySelector(".score");
+    _srcAssetX = srcX;
+    _srcAssetO = srcO;
+    _gamePieceX = doc.createElement("img");
+    _gamePieceX.setAttribute("src", _srcAssetX);
+    _gamePieceO = doc.createElement("img");
+    _gamePieceO.setAttribute("src", _srcAssetO);
+    // _gameboard.classList.add("enabled");
+
     _buttonNextMatch = doc.querySelector(".nextmatch");
     _buttonNextMatch.parentNode.classList.add("hidden");
-    
-    _updateGameBanner();
-    // _gameBanner.textContent = `Your turn ${_currentGamePiece}`;
   };
 
   const _render = function () {
