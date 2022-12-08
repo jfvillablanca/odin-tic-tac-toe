@@ -1,14 +1,14 @@
 // TODO:
 // / Game reset
 // / Fix reset game
-// / DOM popup winner/draw (not  popup, gamebanner update instead) 
+// / DOM popup winner/draw (not  popup, gamebanner update instead)
 // / Scores
 // - Player choose their game piece
 // / Display whose turn it is (Partial)
 // / Highlight winning cells
 // / Prettify the game board in css
 // / Rebase the branch back to main
-// / Refactor HACK of checking if gridcellenabled, 
+// / Refactor HACK of checking if gridcellenabled,
 // use another way of indicating if game has activated
 
 const documentMock = (() => ({
@@ -51,10 +51,7 @@ const Gameboard = (function (doc) {
   // the _moveCount starts at 1 since increment happens on _toggleCurrentGamePiece()
   let _moveCount = 1;
 
-
   const init = function (srcX, srcO) {
-    _scoreX = 0;
-    _scoreO = 0;
     _cacheDOM(srcX, srcO);
     _newGame();
     _newMatch();
@@ -81,7 +78,9 @@ const Gameboard = (function (doc) {
     _buttonNextMatch = doc.querySelector(".nextmatch");
   };
 
-  const _newGame = function() {
+  const _newGame = function () {
+    _scoreX = 0;
+    _scoreO = 0;
     _updateGameBanner("Hello player");
     _buttonResetGame.classList.add("hidden");
 
@@ -95,7 +94,7 @@ const Gameboard = (function (doc) {
     _buttonResetGame.addEventListener("click", () => {
       _resetGame();
     });
-  }
+  };
 
   const _newMatch = function () {
     _moveCount = 1;
@@ -108,7 +107,6 @@ const Gameboard = (function (doc) {
     _gridCells.forEach((_gridCell) => {
       _gridCell.addEventListener("click", _addToGameBoard);
     });
-
   };
 
   const _resetGame = function () {
@@ -154,8 +152,6 @@ const Gameboard = (function (doc) {
     const cellRow = +_gridCellEvent.target.getAttribute("data-row");
     const cellColumn = +_gridCellEvent.target.getAttribute("data-column");
 
-    // HACK: condition 1 checks if the cell is free,
-    // condition 2 checks if the game has started; see: GameStartReset._startGame
     if (
       _gameBoardArray[cellRow][cellColumn] === 0 &&
       _gameboard.classList.contains("enabled")
@@ -176,8 +172,7 @@ const Gameboard = (function (doc) {
         // Negate the _toggleCurrentGamePiece() to record the actual winner
         _toggleCurrentGamePiece();
         _signalThatMatchFinished(`${_currentGamePiece}`);
-      }
-      // Had to use > instead of === since _toggleCurrentGamePiece increments _moveCount early
+      } // Had to use > instead of === since _toggleCurrentGamePiece increments _moveCount early
       else if (_moveCount > MAXIMUM_MOVE_COUNT) {
         console.log("Game draw");
         _signalThatMatchFinished("draw");
@@ -186,7 +181,6 @@ const Gameboard = (function (doc) {
   };
 
   const _signalThatMatchFinished = function (winner) {
-
     if (winner === "X") {
       _scoreX++;
       _updateGameBanner("X wins");
@@ -194,13 +188,13 @@ const Gameboard = (function (doc) {
       _scoreO++;
       _updateGameBanner("O wins");
     } else _updateGameBanner("Game draw");
-    _gameboard.classList.remove("enabled")
+    _gameboard.classList.remove("enabled");
 
     _buttonNextMatch.parentNode.classList.remove("hidden");
     _buttonNextMatch.addEventListener("click", () => {
-      _gameboard.classList.add("enabled")
+      _gameboard.classList.add("enabled");
       _nextMatch();
-    })
+    });
   };
 
   const _nextMatch = function () {
@@ -214,8 +208,6 @@ const Gameboard = (function (doc) {
         gridCell.classList.remove("win");
       }
     });
-
-    // Gameboard.init(_srcAssetX, _srcAssetO);
     _newMatch();
   };
 
@@ -434,14 +426,10 @@ const Gameboard = (function (doc) {
     return;
   };
 
-  const _updateGameBanner = function(announcement) {
-    // _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
+  const _updateGameBanner = function (announcement) {
     _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
-    // if(_gameboard.classList.contains("enabled")) {
-    //   // _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
-    // }
     _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
-  }
+  };
 
   return {
     init,
@@ -453,7 +441,6 @@ const gameLoop = function () {
   const srcCross = "./../images/assets/sword.svg";
   const srcCircle = "./../images/assets/shield.svg";
 
-  // GameStartReset.init(srcCross, srcCircle);
   Gameboard.init(srcCross, srcCircle);
 };
 gameLoop();
