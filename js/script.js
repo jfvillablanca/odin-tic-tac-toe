@@ -79,13 +79,13 @@ const Gameboard = (function (doc) {
     _buttonNextMatch = doc.querySelector(".nextmatch");
     _buttonNextMatch.parentNode.classList.add("hidden");
     
-    updateGameBanner();
+    _updateGameBanner();
     // _gameBanner.textContent = `Your turn ${_currentGamePiece}`;
   };
 
   const _render = function () {
     // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
-    updateGameBanner();
+    _updateGameBanner();
     //
     [..._gridCells].forEach((_gridCell) => {
       const row = +_gridCell.getAttribute("data-row");
@@ -145,10 +145,10 @@ const Gameboard = (function (doc) {
 
     if (winner === "X") {
       _scoreX++;
-      updateGameBanner("X wins");
+      _updateGameBanner("X wins");
     } else if (winner === "O") {
       _scoreO++;
-      updateGameBanner("O wins");
+      _updateGameBanner("O wins");
     }
     _gameboard.classList.remove("enabled")
 
@@ -160,7 +160,7 @@ const Gameboard = (function (doc) {
   };
 
   const _newMatch = function () {
-    updateGameBanner();
+    _updateGameBanner();
     _gridCells.forEach((gridCell) => {
       // gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
@@ -389,7 +389,7 @@ const Gameboard = (function (doc) {
     return;
   };
 
-  const updateGameBanner = function(announcement) {
+  const _updateGameBanner = function(announcement) {
     if(_gameboard.classList.contains("enabled")) {
       // _gameBanner.textContent = `Your turn: ${_currentGamePiece === "X" ? "O" : "X"}`;
       _gameBanner.textContent = announcement || `Your turn: ${_currentGamePiece}`;
@@ -398,7 +398,6 @@ const Gameboard = (function (doc) {
   }
 
   return {
-    updateGameBanner,
     init,
   };
 })(document || documentMock);
