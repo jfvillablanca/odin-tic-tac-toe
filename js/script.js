@@ -438,8 +438,8 @@ const Gameboard = (function (doc) {
 
 // NOTE: Main game loop
 const gameLoop = function () {
-  const srcCross = "./../images/sword.svg";
-  const srcCircle = "./../images/shield.svg";
+  const srcCross = "images/sword.svg";
+  const srcCircle = "images/shield.svg";
 
   Gameboard.init(srcCross, srcCircle);
 };
