@@ -6,7 +6,9 @@
 // / Display whose turn it is (Partial)
 // / Highlight winning cells
 // / Prettify the game board in css
-// NOTE: Check MutationObserver API for the resetgame button problem
+// - Rebase the branch back to main
+// - Refactor HACK of checking if gridcellenabled, 
+// use another way of indicating if game has activated
 
 const documentMock = (() => ({
   querySelector: (_selector) => ({
@@ -17,6 +19,7 @@ const documentMock = (() => ({
 const Gameboard = (function (doc) {
   "use strict";
 
+  let _gameboard;
   let _gridCells;
   let _gamePieceX;
   let _gamePieceO;
@@ -60,11 +63,14 @@ const Gameboard = (function (doc) {
     _gamePieceX.setAttribute("src", _srcAssetX);
     _gamePieceO = doc.createElement("img");
     _gamePieceO.setAttribute("src", _srcAssetO);
-    _gridCells = doc.querySelectorAll(".tictacgrid");
+    _gameboard = doc.querySelector(".gameboard");
+    // _gameboard.classList.add("enabled");
 
+
+    _gridCells = doc.querySelectorAll(".tictacgrid");
     _gridCells.forEach((_gridCell) => {
       _gridCell.addEventListener("click", _addToGameBoard);
-      _gridCell.classList.add("enabled");
+      // _gridCell.classList.add("enabled");
     });
 
     _gameBanner = doc.querySelector(".gamebanner");
@@ -106,7 +112,7 @@ const Gameboard = (function (doc) {
     // condition 2 checks if the game has started; see: GameStartReset._startGame
     if (
       _gameBoardArray[cellRow][cellColumn] === 0 &&
-      _gridCellEvent.target.classList.contains("enabled")
+      _gameboard.classList.contains("enabled")
     ) {
       _gameBoardArray[cellRow].splice(cellColumn, 1, _currentGamePiece);
 
@@ -140,17 +146,18 @@ const Gameboard = (function (doc) {
       _scoreO++;
       _gameBanner.textContent = "O wins";
     }
-    _gameScore.textContent = `X: [${_scoreX}]    O: [${_scoreO}] `;
+    _gameboard.classList.remove("enabled")
 
     _buttonNextMatch.parentNode.classList.remove("hidden");
     _buttonNextMatch.addEventListener("click", () => {
+      _gameboard.classList.add("enabled")
       _newMatch();
     })
   };
 
   const _newMatch = function () {
     _gridCells.forEach((gridCell) => {
-      gridCell.classList.remove("enabled");
+      // gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
         gridCell.removeChild(gridCell.firstChild);
       }
@@ -388,6 +395,7 @@ const GameStartReset = (function (doc) {
   let _popupWindow;
   let _startGameButton;
   let _resetGameButton;
+  let _gameboard;
   let _gridCells;
   let _gameBanner;
 
@@ -401,6 +409,7 @@ const GameStartReset = (function (doc) {
     _startGameButton = doc.querySelector(".popup > button");
     _resetGameButton = doc.querySelector(".container > :last-child");
     _gameBanner = doc.querySelector(".gamebanner");
+    _gameboard = doc.querySelector(".gameboard");
     _gridCells = doc.querySelectorAll(".tictacgrid");
     _resetGameButton.classList.add("hidden");
     _initializeGame();
@@ -415,9 +424,10 @@ const GameStartReset = (function (doc) {
 
       // HACK: the .enabled class is a toggle to see
       // if the gridCell will start rendering gamepieces
-      _gridCells.forEach((gridCell) => {
-        gridCell.classList.add("enabled");
-      });
+      _gameboard.classList.add("enabled");
+      // _gridCells.forEach((gridCell) => {
+      //   gridCell.classList.add("enabled");
+      // });
     });
 
     _resetGameButton.addEventListener("click", () => {
@@ -428,9 +438,10 @@ const GameStartReset = (function (doc) {
   const _resetGame = function () {
     _popupWindow.classList.remove("hidden");
     _resetGameButton.classList.add("hidden");
+    _gameboard.classList.remove("enabled");
 
     _gridCells.forEach((gridCell) => {
-      gridCell.classList.remove("enabled");
+      // gridCell.classList.remove("enabled");
       if (gridCell.firstChild) {
         gridCell.removeChild(gridCell.firstChild);
       }
